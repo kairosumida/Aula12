@@ -17,7 +17,7 @@ namespace Aula12.Controllers
         // GET: Usuarios
         public ActionResult Index()
         {
-            IsAdmin();
+            if (!IsAdmin()) { return RedirectToAction("Index", "Inicio", new { msg = "Você não está autorizado" }); }
             if ((Usuario)Session["Usuario"] != null && "Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
                 return RedirectToAction("Index", "Banido");
             var usuarios = db.Usuarios.Include(u => u.StatusUsuario);
@@ -27,7 +27,7 @@ namespace Aula12.Controllers
         // GET: Usuarios/Details/5
         public ActionResult Details(int? id)
         {
-            IsAdmin();
+            if (!IsAdmin()) { return RedirectToAction("Index", "Inicio", new { msg = "Você não está autorizado" }); }
             if ((Usuario)Session["Usuario"] != null && "Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
                 return RedirectToAction("Index", "Banido");
             if (id == null)
@@ -66,7 +66,7 @@ namespace Aula12.Controllers
             {
                 ModelState.AddModelError("usuario.Senha", "Senha não confere");
             }
-            if (db.Usuarios.FirstOrDefault(x=>x.Email == usuario.Email) != null)
+            if (db.Usuarios.FirstOrDefault(x=>x.Email.Equals(usuario.Email)) != null)
             {
                 ModelState.AddModelError("usuario.Email", "Email já cadastrado");
             }
@@ -74,8 +74,9 @@ namespace Aula12.Controllers
             if (ModelState.IsValid)
             {
                 db.Usuarios.Add(usuario);
+                
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Login","");
             }
 
             ViewBag.StatusUsuarioId = new SelectList(db.StatusUsuarios, "StatusUsuarioId", "NomeStatus", usuario.StatusUsuarioId);
@@ -86,11 +87,15 @@ namespace Aula12.Controllers
         public ActionResult Edit(int? id)
         {
             IsAdmin();
-            if ((Usuario)Session["Usuario"] != null && "Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
+            if ((Usuario)Session["Usuario"] == null)
+            {
+                return RedirectToAction("Index", "Inicio", new { msg = "Não tem um usuario logado para mudar a senha" });
+            }
+            if ("Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
                 return RedirectToAction("Index", "Banido");
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                id = ((Usuario)Session["Usuario"]).UsuarioId;
             }
             Usuario usuario = db.Usuarios.Find(id);
             if (usuario == null)
@@ -117,7 +122,10 @@ namespace Aula12.Controllers
                     ModelState.AddModelError("usuario.Senha", "Senha invalida");//Isso é o q barra a troca
                 }
             }
-
+            if(usuario.NovaSenha == null)
+            {
+                ModelState.AddModelError("usuario.SenhaBranca", "Senha inválida");
+            }
             if (usuario.NovaSenha != usuario.SenhaRepete)//Mesmo o adm deve conferir as 2 senhas
             {
                 ModelState.AddModelError("usuario.SenhaRepete", "Senha não confere");
@@ -136,7 +144,7 @@ namespace Aula12.Controllers
         // GET: Usuarios/Delete/5
         public ActionResult Delete(int? id)
         {
-            IsAdmin();
+            if (!IsAdmin()) { return RedirectToAction("Index", "Inicio", new { msg = "Você não está autorizado" }); }
             if ((Usuario)Session["Usuario"] != null && "Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
                 return RedirectToAction("Index", "Banido");
             if (id == null)
@@ -156,6 +164,7 @@ namespace Aula12.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!IsAdmin()) { return RedirectToAction("Index", "Inicio", new { msg = "Você não está autorizado" }); }
             if ((Usuario)Session["Usuario"] != null && "Bloqueado" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)
                 return RedirectToAction("Index", "Banido");
             Usuario usuario = db.Usuarios.Find(id);
@@ -187,4 +196,6 @@ namespace Aula12.Controllers
             return false;
         }
     }
+
+    
 }

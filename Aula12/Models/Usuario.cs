@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,8 +19,11 @@ namespace Aula12.Models
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
+        [RegularExpression("(?=.*[0-9])(?=.*[a-z])(?=.*[*+\\/|!\"£$%^&*()#[\\]@~'?><,.=-_]).{6,10}", ErrorMessage = "a senha deve ter de 6 a 10 caracteres e deve conter números, caracteres normais e especiais")]
         public string Senha { get; set; }
+        [DisplayName("Data de Cadastro")]
         public DateTime DataCadastro { get; set; } = DateTime.Now;
+        [DisplayName("Último Acesso")]
         public DateTime UltimoAcesso { get; set; } = DateTime.Now;
 
         public int StatusUsuarioId { get; set; } = 1;
@@ -28,11 +32,15 @@ namespace Aula12.Models
         #region(Não pertence ao BD)
         [NotMapped]
         [DataType(DataType.Password)]
+        [DisplayName("Senha antiga")]
         public string SenhaAntiga { get; set; }
         [NotMapped]
         [DataType(DataType.Password)]
+        [DisplayName("Repetir Senha")]
         public string SenhaRepete { get; set; }
         [NotMapped]
+        [DisplayName("Nova Senha")]
+        [RegularExpression("(?=.*[0-9])(?=.*[a-z])(?=.*[*+\\/|!\"£$%^&*()#[\\]@~'?><,.=-_]).{6,10}", ErrorMessage = "a senha deve ter de 6 a 10 caracteres e deve conter números, caracteres normais e especiais")]
         [DataType(DataType.Password)]
         public string NovaSenha { get; set; }
         /* Não da certo pois quando vai atualizar, precisa ser o mesmo email, causando problemas

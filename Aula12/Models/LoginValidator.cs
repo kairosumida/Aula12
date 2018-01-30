@@ -14,6 +14,7 @@ namespace Aula12.Models
 
         [Required]
         [DataType(DataType.Password)]
+        [RegularExpression("(?=.*[0-9])(?=.*[a-z])(?=.*[*+\\/|!\"£$%^&*()#[\\]@~'?><,.=-_]).{6,10}", ErrorMessage = "a senha deve ter de 6 a 10 caracteres e deve conter números, caracteres normais e especiais")]
         public string Senha { get; set; }
     }
 }

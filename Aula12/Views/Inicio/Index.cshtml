@@ -2,6 +2,13 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<h1>Bem vindo 
+    @{
+        var nome = "";
+        if (((Aula12.Models.Usuario)Session["Usuario"]) != null) {
+            nome = ((Aula12.Models.Usuario)Session["Usuario"]).Nome.ToString();
+        }
+    }
+    @nome</h1>
 <h2>@ViewBag.Msg</h2>
 

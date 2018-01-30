@@ -120,11 +120,11 @@
     <Content Include="Views\StatusUsuarios\Details.cshtml" />
     <Content Include="Views\StatusUsuarios\Edit.cshtml" />
     <Content Include="Views\StatusUsuarios\Index.cshtml" />
-    <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Banido\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AutenticacoesController.cs" />
     <Compile Include="Controllers\BanidoController.cs" />
     <Compile Include="Controllers\InicioController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -140,6 +140,14 @@
     <Compile Include="Migrations\201801291745114_Autenticacao.cs" />
     <Compile Include="Migrations\201801291745114_Autenticacao.Designer.cs">
       <DependentUpon>201801291745114_Autenticacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801301445429_algo.cs" />
+    <Compile Include="Migrations\201801301445429_algo.Designer.cs">
+      <DependentUpon>201801301445429_algo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801301735446_migra.cs" />
+    <Compile Include="Migrations\201801301735446_migra.Designer.cs">
+      <DependentUpon>201801301735446_migra.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Aula12Context.cs" />
@@ -161,6 +169,12 @@
     <Content Include="Views\Usuarios\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Inicio\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Autenticacoes\Create.cshtml" />
+    <Content Include="Views\Autenticacoes\Delete.cshtml" />
+    <Content Include="Views\Autenticacoes\Details.cshtml" />
+    <Content Include="Views\Autenticacoes\Edit.cshtml" />
+    <Content Include="Views\Autenticacoes\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -177,6 +191,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801291745114_Autenticacao.resx">
       <DependentUpon>201801291745114_Autenticacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801301445429_algo.resx">
+      <DependentUpon>201801301445429_algo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801301735446_migra.resx">
+      <DependentUpon>201801301735446_migra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

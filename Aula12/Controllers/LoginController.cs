@@ -1,6 +1,7 @@
 ﻿using Aula12.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,12 +19,10 @@ namespace Aula12.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index([Bind(Include = "Email,Senha")] LoginValidator login)
         {
-
-            
             Aula12Context db = new Aula12Context();
             // GET: Login
           
-                var usuario = db.Usuarios.FirstOrDefault(x => x.Email == login.Email && x.Senha == login.Senha);
+                var usuario = db.Usuarios.FirstOrDefault(x => x.Email == login.Email && x.Senha == login.Senha);//Procura a senha e email, para ver se é compativel
                 if (usuario != null)
                 {
 
@@ -32,9 +31,12 @@ namespace Aula12.Controllers
                         UsuarioId = usuario.UsuarioId,
                         Data = DateTime.Now
                     });
+                    usuario.UltimoAcesso = DateTime.Now;
+                    db.Entry(usuario).State = EntityState.Modified;//Modifica a data do ultimo acesso do usuario
+
                     db.SaveChanges();
                     Session["Usuario"] = usuario;
-                    return RedirectToAction("Create", "Usuarios");
+                    return RedirectToAction("Index", "Inicio", "");
                 }
             else
             {
