@@ -17,12 +17,16 @@ namespace Aula12.Controllers
         // GET: StatusUsuarios
         public ActionResult Index()
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             return View(db.StatusUsuarios.ToList());
         }
 
         // GET: StatusUsuarios/Details/5
         public ActionResult Details(int? id)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +42,8 @@ namespace Aula12.Controllers
         // GET: StatusUsuarios/Create
         public ActionResult Create()
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             return View();
         }
 
@@ -48,6 +54,8 @@ namespace Aula12.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "StatusUsuarioId,NomeStatus")] StatusUsuario statusUsuario)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             if (ModelState.IsValid)
             {
                 db.StatusUsuarios.Add(statusUsuario);
@@ -61,6 +69,8 @@ namespace Aula12.Controllers
         // GET: StatusUsuarios/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -80,6 +90,8 @@ namespace Aula12.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "StatusUsuarioId,NomeStatus")] StatusUsuario statusUsuario)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             if (ModelState.IsValid)
             {
                 db.Entry(statusUsuario).State = EntityState.Modified;
@@ -92,6 +104,8 @@ namespace Aula12.Controllers
         // GET: StatusUsuarios/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +123,8 @@ namespace Aula12.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!IsAdmin())
+                return RedirectToAction("index", "Inicio", new { msg = "Você não está autorizado" });
             StatusUsuario statusUsuario = db.StatusUsuarios.Find(id);
             db.StatusUsuarios.Remove(statusUsuario);
             db.SaveChanges();
@@ -122,6 +138,19 @@ namespace Aula12.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        public bool IsAdmin()
+        {
+            if (Session["Usuario"] != null)
+            {
+                if ("Administrador" == ((Usuario)Session["Usuario"]).StatusUsuario.NomeStatus)//Verifica se o usuario logado é um adm
+                {
+                    ViewBag.IsAdmin = true;
+                    return true;
+                }
+            }
+            ViewBag.IsAdmin = false;
+            return false;
         }
     }
 }
